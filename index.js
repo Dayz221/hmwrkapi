@@ -26,7 +26,7 @@ app.listen(PORT, async (err) => {
     if (err) return console.log(color.red(err))
 
     await mongoose
-        .connect("mongodb+srv://dayz221:qwerfvbhu123@app.7iifv.mongodb.net/?retryWrites=true&w=majority&appNa")
+        .connect("mongodb+srv://dayz221:qwerfvbhu123@app.7iifv.mongodb.net/?retryWrites=true&w=majority&appName=app")
         .then(() => { console.log(color.green(`MongoDB attached!`)) })
         .catch((err) => { console.log(color.red(err)) })
 
