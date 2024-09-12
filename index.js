@@ -27,24 +27,25 @@ app.listen(PORT, async (err) => {
 
     await mongoose
         .connect("mongodb+srv://dayz221:qwedcvhu123@cluster0.7iifv.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
-        .then(() => { console.log(color.green(`MongoDB attached!`)) })
+        .then(async () => { 
+            console.log(color.green(`MongoDB attached!`))
+            try {
+                const botAdmin = await User.findOne({ login: "TelegramBot" })
+                const groupId = await Group.findOne({ name: "ИУ7-16Б" })
+                if (!groupId) {
+                    const group = new Group({ name: "ИУ7-16Б" })
+                    await group.save()
+                    groupId = group._id
+                }
+                if (!botAdmin) {
+                    const bot = new User({ login: "TelegramBot", password: bcrypt.hashSync(TELEGRAM_BOT_PASSWORD, 8), groupId: groupId._id, telegramId: 0, permissions: 3 })
+                    await bot.save()
+                }
+            } catch (e) {
+                console.log(e)
+            } 
+        })
         .catch((err) => { console.log(color.red(err)) })
-
-    try {
-        const botAdmin = await User.findOne({ login: "TelegramBot" })
-        const groupId = await Group.findOne({ name: "ИУ7-16Б" })
-        if (!groupId) {
-            const group = new Group({ name: "ИУ7-16Б" })
-            await group.save()
-            groupId = group._id
-        }
-        if (!botAdmin) {
-            const bot = new User({ login: "TelegramBot", password: bcrypt.hashSync(TELEGRAM_BOT_PASSWORD, 8), groupId: groupId._id, telegramId: 0, permissions: 3 })
-            await bot.save()
-        }
-    } catch (e) {
-        console.log(e)
-    }
 
     console.log(color.green(`Server started on http://localhost:${PORT}`))
 })    
