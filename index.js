@@ -32,13 +32,13 @@ app.listen(PORT, async (err) => {
 
     try {
         const botAdmin = await User.findOne({ login: "TelegramBot" })
+        const groupId = await Group.findOne({ name: "ИУ7-16Б" })
+        if (!groupId) {
+            const group = new Group({ name: "ИУ7-16Б" })
+            await group.save()
+            groupId = group._id
+        }
         if (!botAdmin) {
-            const groupId = await Group.findOne({ name: "ИУ7-16Б" })
-            if (!groupId) {
-                const group = new Group({ name: "ИУ7-16Б" })
-                await group.save()
-                groupId = group._id
-            }
             const bot = new User({ login: "TelegramBot", password: bcrypt.hashSync(TELEGRAM_BOT_PASSWORD, 8), groupId: groupId._id, telegramId: 0, permissions: 3 })
             await bot.save()
         }
