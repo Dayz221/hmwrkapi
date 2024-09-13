@@ -14,19 +14,23 @@ const fileExists = (filePath) => {
 
 const storage = multer.diskStorage({
     destination: async (req, file, cb) => {
-        const task = await Task.findOne({ _id: req.params.task_id })
-        const group = await Group.findOne({ _id: req.user.groupId })
+        try {
+            const task = await Task.findOne({ _id: req.params.task_id })
+            const group = await Group.findOne({ _id: req.user.groupId })
 
-        const time = new Date(task.deadline)
-        const uploadPath = path.join("files", group.name, task.subject, `${String(time.getUTCDate()).padStart(2, '0')}.${String(time.getUTCMonth()+1).padStart(2, '0')}.${time.getUTCFullYear()}`)
-        
-        file.originalname = Buffer.from(file.originalname, 'latin1').toString()
-        console.log(path.join(uploadPath, file.originalname))
-        req.fileExists = await fileExists(path.join(uploadPath, file.originalname))
+            const time = new Date(task.deadline)
+            const uploadPath = path.join("files", group.name, task.subject, `${String(time.getUTCDate()).padStart(2, '0')}.${String(time.getUTCMonth()+1).padStart(2, '0')}.${time.getUTCFullYear()}`)
+            
+            file.originalname = Buffer.from(file.originalname, 'latin1').toString()
+            console.log(path.join(uploadPath, file.originalname))
+            req.fileExists = await fileExists(path.join(uploadPath, file.originalname))
 
-        fs.mkdirSync(uploadPath, { recursive: true })
+            fs.mkdirSync(uploadPath, { recursive: true })
 
-        cb(null, uploadPath)
+            cb(null, uploadPath)
+        } catch (e) {
+            console.log(e)
+        }
     },
     filename: (req, file, cb) => {
         cb(null, file.originalname)
