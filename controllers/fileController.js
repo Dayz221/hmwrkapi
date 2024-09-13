@@ -27,30 +27,42 @@ class FileController {
             const task = await Task.findOne({ _id: task_id })
             const group = await Group.findOne({ _id: req.user.groupId })
 
+            console.log(1)
+
             const dir = path.join(FILE_PATH, group.name, task.subject)
             const newFilePath = path.join(dir, fileName)
+            console.log(2)
             if (fs.existsSync(newFilePath)) return res.status(400).send({ message: "Такой файл уже существует" })
+                console.log(3)
             fs.mkdir(dir, { recursive: true }, (err) => {
+                console.log(4)
                 if (err) return res.status(500).send({ message: "Ошибка, проверьте данные" })
+                console.log(5)
                 fs.rename(filePath, newFilePath, (err) => {
                     if (err) return res.status(500).send({ message: "Ошибка, проверьте данные" })
+                    console.log(6)
                 })
+                console.log(7)
             })
+
+            console.log(8)
 
             const file = new File({ name: fileName, path: newFilePath, taskId: task_id })
             await file.save()
 
+            console.log(9)
+
             task.files.push(file._id)
             await task.save()
 
-            res.send({ file, message: "Файл успещно сохранен" })
+            res.status(200).send({ file, message: "Файл успещно сохранен" })
 
         } catch (e) {
             console.log(e)
             res.status(500).send({ message: "Ошибка, проверьте данные" })
         } finally {
-            // await rimraf(path.join(process.cwd(), 'temp'))
-            // fs.mkdirSync(path.join(process.cwd(), 'temp'))
+            await rimraf(path.join(process.cwd(), 'temp'))
+            fs.mkdirSync(path.join(process.cwd(), 'temp'))
         }
     }
 
