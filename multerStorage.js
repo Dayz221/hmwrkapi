@@ -22,7 +22,6 @@ const storage = multer.diskStorage({
             const uploadPath = path.join("files", group.name, task.subject, `${String(time.getUTCDate()).padStart(2, '0')}.${String(time.getUTCMonth()+1).padStart(2, '0')}.${time.getUTCFullYear()}`)
             
             file.originalname = Buffer.from(file.originalname, 'latin1').toString()
-            console.log(path.join(uploadPath, file.originalname))
             req.fileExists = await fileExists(path.join(uploadPath, file.originalname))
 
             fs.mkdirSync(uploadPath, { recursive: true })

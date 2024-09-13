@@ -19,13 +19,13 @@ class FileController {
     async uploadFile(req, res) {
         try {
             if (req.fileExists) return res.status(400).send({ message: "Файл с таким названием уже загружен" })
-            const task = await Task.findOne({ _id: req.params.task_id })
+            // const task = await Task.findOne({ _id: req.params.task_id })
 
-            const file = new File({ name: req.file.originalname, path: req.file.path, taskId: req.params.task_id })
-            await file.save()
+            // const file = new File({ name: req.file.originalname, path: req.file.path, taskId: req.params.task_id })
+            // await file.save()
 
-            task.files.push(file._id)
-            await task.save()
+            // task.files.push(file._id)
+            // await task.save()
 
             res.status(200).send({ file, message: "Файл успещно сохранен" })
         } catch (e) {
