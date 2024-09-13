@@ -45,7 +45,7 @@ class TaskController {
             const task = await Task.findOne({ _id: task_id })
             await task.updateOne(req.body)
             const response = await task.save()
-            return res.status(200).json({ ...response._doc, ...req.body, message: "OK" })
+            return res.status(200).json({ task: { ...response._doc, ...req.body }, message: "OK" })
         } catch (e) {
             console.log(e)
             res.status(500).send({ message: "Ошибка, проверьте данные" })
@@ -61,7 +61,7 @@ class TaskController {
 
             task.files.forEach(async el => {
                 const file = await File.findOne({ _id: el })
-                fs.unlink(path.join(process.cwd(), file.path), (err) => {})
+                fs.unlink(path.join(process.cwd(), file.path), (err) => { })
                 await file.deleteOne()
             })
 
