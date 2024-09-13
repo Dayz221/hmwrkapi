@@ -49,8 +49,8 @@ class FileController {
             console.log(e)
             res.status(500).send({ message: "Ошибка, проверьте данные" })
         } finally {
-            await rimraf(path.join(process.cwd(), 'temp'))
-            fs.mkdirSync(path.join(process.cwd(), 'temp'))
+            // await rimraf(path.join(process.cwd(), 'temp'))
+            // fs.mkdirSync(path.join(process.cwd(), 'temp'))
         }
     }
 
