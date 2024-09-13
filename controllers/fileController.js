@@ -27,7 +27,7 @@ class FileController {
             task.files.push(file._id)
             await task.save()
 
-            res.status(200).send({ file, message: "Файл успещно сохранен" })
+            res.status(200).send({ file: file, message: "Файл успещно сохранен" })
         } catch (e) {
             console.log(e)
             res.status(500).send({ message: "Ошибка, проверьте данные" })
