@@ -9,7 +9,6 @@ import User from "./models/user.js"
 import bcrypt from "bcrypt"
 import { TELEGRAM_BOT_PASSWORD } from "./config.js"
 import Group from "./models/group.js"
-import serverless from "serverless-http"
 
 const PORT = process.env.PORT || 8000
 

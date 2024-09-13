@@ -1,10 +1,7 @@
-import Group from "../models/group.js"
 import Task from "../models/task.js"
 import File from "../models/file.js"
 import fs from "fs"
 import path from "path"
-import { FILE_PATH } from "../config.js"
-import { rimraf } from "rimraf"
 
 class FileController {
     async getFile(req, res) {
@@ -21,50 +18,19 @@ class FileController {
 
     async uploadFile(req, res) {
         try {
-            const filePath = req.file.path
-            const fileName = req.file.originalname
-            const task_id = req.params.task_id
-            console.log(0)
-            const task = await Task.findOne({ _id: task_id })
-            const group = await Group.findOne({ _id: req.user.groupId })
+            if (req.fileExists) return res.status(400).send({ message: "Файл с таким названием уже загружен" })
+            const task = await Task.findOne({ _id: req.params.task_id })
 
-            console.log(1)
-
-            const dir = path.join(FILE_PATH, group.name, task.subject)
-            const newFilePath = path.join(dir, fileName)
-            console.log(2)
-            if (fs.existsSync(newFilePath)) return res.status(400).send({ message: "Такой файл уже существует" })
-                console.log(3)
-            fs.mkdir(dir, { recursive: true }, (err) => {
-                console.log(4)
-                if (err) return res.status(500).send({ message: "Ошибка, проверьте данные" })
-                console.log(5)
-                fs.rename(filePath, newFilePath, (err) => {
-                    if (err) return res.status(500).send({ message: "Ошибка, проверьте данные" })
-                    console.log(6)
-                })
-                console.log(7)
-            })
-
-            console.log(8)
-
-            const file = new File({ name: fileName, path: newFilePath, taskId: task_id })
+            const file = new File({ name: req.file.originalname, path: req.file.path, taskId: req.params.task_id })
             await file.save()
-
-            console.log(9)
 
             task.files.push(file._id)
             await task.save()
 
             res.status(200).send({ file, message: "Файл успещно сохранен" })
-
         } catch (e) {
             console.log(e)
             res.status(500).send({ message: "Ошибка, проверьте данные" })
-        } finally {
-            console.log(10)
-            await rimraf(path.join(process.cwd(), 'temp'))
-            fs.mkdirSync(path.join(process.cwd(), 'temp'))
         }
     }
 

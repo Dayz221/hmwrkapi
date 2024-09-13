@@ -59,13 +59,9 @@ class TaskController {
             const group = await Group.findOne({ _id: user.groupId })
             const task = await Task.findOne({ _id: task_id })
 
-            // if (!group.tasks.contains(task._id)) return res.status(500).send({ message: "У пользователя нет такого задания" })
-
             task.files.forEach(async el => {
                 const file = await File.findOne({ _id: el })
-                fs.unlink(path.join(process.cwd(), file.path), (err) => {
-                    if (err) res.status(500).send({ message: "Ошибка, проверьте данные" })
-                })
+                fs.unlink(path.join(process.cwd(), file.path), (err) => {})
                 await file.deleteOne()
             })
 

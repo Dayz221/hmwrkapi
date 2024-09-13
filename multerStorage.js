@@ -1,16 +1,38 @@
 import multer from "multer"
 import path from "path"
+import fs from "fs"
+import Task from "./models/task.js"
+import Group from "./models/group.js"
+
+const fileExists = (filePath) => {
+    return new Promise((resolve) => {
+        fs.access(filePath, fs.constants.F_OK, (err) => {
+            resolve(!err);
+        })
+    })
+}
 
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'temp/')
+    destination: async (req, file, cb) => {
+        const task = await Task.findOne({ _id: req.params.task_id })
+        const group = await Group.findOne({ _id: req.user.groupId })
+
+        const time = new Date(task.deadline)
+        const uploadPath = path.join("files", group.name, task.subject, `${String(time.getUTCDate()).padStart(2, '0')}.${String(time.getUTCMonth()+1).padStart(2, '0')}.${time.getUTCFullYear()}`)
+        
+        file.originalname = Buffer.from(file.originalname, 'latin1').toString()
+        console.log(path.join(uploadPath, file.originalname))
+        req.fileExists = await fileExists(path.join(uploadPath, file.originalname))
+
+        fs.mkdirSync(uploadPath, { recursive: true })
+
+        cb(null, uploadPath)
     },
     filename: (req, file, cb) => {
-        cb(null, Date.now() + path.extname(file.originalname))
+        cb(null, file.originalname)
     }
 })
 
-export const uploadFile = multer({ 
-    storage: storage,
-    limits: { fileSize: 25 * 1024 * 1024 }
+export const uploadFile = multer({
+    storage: storage
 })
