@@ -24,6 +24,7 @@ class FileController {
             const filePath = req.file.path
             const fileName = req.file.originalname
             const task_id = req.params.task_id
+            console.log(0)
             const task = await Task.findOne({ _id: task_id })
             const group = await Group.findOne({ _id: req.user.groupId })
 
