@@ -10,6 +10,7 @@ import bcrypt from "bcrypt"
 import { TELEGRAM_BOT_PASSWORD } from "./config.js"
 import Group from "./models/group.js"
 import apiRouter from "./routes/apiRouter.js"
+import cors from "cors"
 // import teleBot from "./teleBot.js"
 
 const PORT = process.env.PORT || 8000
@@ -18,6 +19,7 @@ const app = express()
 
 app.use(express.json())
 app.use(logger)
+app.use(cors())
 app.use("/api/auth", authRouter)
 app.use("/api/tasks", taskRouter)
 app.use("/api/files", fileRouter)
