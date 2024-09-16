@@ -53,7 +53,6 @@ app.get('/', (req, res) => res.status(200).send({ message: "homework site and te
 
 app.listen(8080, (err) => {
     if (err) return console.log(color.red(err))
-    console.log(color.green(`Server started on http://localhost:${PORT}`))
 })    
 
 https.createServer(
@@ -64,7 +63,6 @@ https.createServer(
     app
 ).listen(8443, (err) => {
     if (err) return console.log(color.red(err))
-    console.log(color.green(`Server started on http://localhost:${PORT}`))
 })
 
 export default app
