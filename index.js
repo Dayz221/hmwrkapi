@@ -13,13 +13,14 @@ import apiRouter from "./routes/apiRouter.js"
 import cors from "cors"
 // import teleBot from "./teleBot.js"
 
-const PORT = process.env.PORT || 8000
+const PORT = process.env.PORT || 80
 
 const app = express()
 
 app.use(express.json())
 app.use(logger)
 app.use(cors())
+app.use(express.static('static'))
 app.use("/api/auth", authRouter)
 app.use("/api/tasks", taskRouter)
 app.use("/api/files", fileRouter)
