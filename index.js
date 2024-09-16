@@ -51,7 +51,7 @@ app.use("/api", apiRouter)
 
 app.get('/', (req, res) => res.status(200).send({ message: "homework site and telegram-bot api" }))
 
-app.listen(8080, (err) => {
+app.listen(80, (err) => {
     if (err) return console.log(color.red(err))
 })    
 
@@ -61,7 +61,7 @@ https.createServer(
         key: fs.readFileSync('./cert/privkey.pem')
     },
     app
-).listen(8443, (err) => {
+).listen(443, (err) => {
     if (err) return console.log(color.red(err))
 })
 
