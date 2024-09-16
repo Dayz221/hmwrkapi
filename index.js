@@ -9,6 +9,8 @@ import User from "./models/user.js"
 import bcrypt from "bcrypt"
 import { TELEGRAM_BOT_PASSWORD } from "./config.js"
 import Group from "./models/group.js"
+import apiRouter from "./routes/apiRouter.js"
+// import teleBot from "./teleBot.js"
 
 const PORT = process.env.PORT || 8000
 
@@ -19,6 +21,7 @@ app.use(logger)
 app.use("/api/auth", authRouter)
 app.use("/api/tasks", taskRouter)
 app.use("/api/files", fileRouter)
+app.use("/api", apiRouter)
 
 app.get('/', (req, res) => res.status(200).send({ message: "homework site and telegram-bot api" }))
 

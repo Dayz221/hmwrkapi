@@ -11,19 +11,26 @@ const authRouter = Router()
 
 authRouter.post("/register",
     [
-        check("login", "Длина логина не может быть меньше 3 и больше 20 символов").isLength({ min: 3, max: 20 }),
-        check("password", "Длина пароля не может быть меньше 4 и больше 20 символов").isLength({ min: 4, max: 20 })
+        check("login", "Длина логина не может быть меньше 3 символов").isLength({ min: 3 }),
+        check("password", "Длина пароля не может быть меньше 4 символов").isLength({ min: 4 })
     ],
     async (req, res) => {
         try {
             const err = validationResult(req)
             if (!err.isEmpty()) return res.status(400).send({ message: err.errors[0].msg })
 
-            const { login, password, groupName, telegramId } = req.body
+            const { login, password, telegramId } = req.body
             const candidate = await User.findOne({ login })
             if (candidate) return res.status(400).send({ message: "Пользователь с таким логином уже существует" })
 
-            const group = await Group.findOne({ name: groupName })
+            let group;
+
+            if (req.body.groupName) {
+                group = await Group.findOne({ name: req.body.groupName })
+            } else {
+                group = await Group.findOne({ _id: req.body.groupId })
+            }
+            
             const hashedPassword = await bcrypt.hash(password, 8)
             const newUser = new User({ login, password: hashedPassword, groupId: group._id, telegramId: telegramId })
 
