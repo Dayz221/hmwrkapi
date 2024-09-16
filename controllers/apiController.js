@@ -7,7 +7,6 @@ class ApiController {
         try {
             const groups = await Group.find()
             const answ = groups.map(el => {return { name: el.name, _id: el._id }})
-            console.log(answ)
             res.status(200).send({ groups: answ, message: "OK" })
         } catch (e) {
             console.log(e)
