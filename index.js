@@ -9,7 +9,7 @@ import User from "./models/user.js"
 import bcrypt from "bcrypt"
 import { TELEGRAM_BOT_PASSWORD } from "./config.js"
 import Group from "./models/group.js"
-import teleBot from "./teleBot.js"
+// import teleBot from "./teleBot.js"
 
 const PORT = process.env.PORT || 8000
 
