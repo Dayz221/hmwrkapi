@@ -48,12 +48,6 @@ app.use(express.json())
 app.use(logger)
 app.use(cors())
 app.use(express.static('static'))
-app.use(session({
-    secret: SECRET_KEY,
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: false }
-}))
 app.use("/api/auth", authRouter)
 app.use("/api/tasks", taskRouter)
 app.use("/api/files", fileRouter)
