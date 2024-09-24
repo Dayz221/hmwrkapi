@@ -64,7 +64,7 @@ authRouter.post("/login",
 
             if (type === "webApp") {
                 const secretKey = crypto.createHash('sha256')
-                    .update(TOKEN)
+                    .update(process.env.TOKEN)
                     .digest()
                 const { hash, ...userData } = data
                 const dataCheckString = Object.keys(userData)
@@ -79,7 +79,7 @@ authRouter.post("/login",
                 const encoded = decodeURIComponent(data)
                 const secret = crypto
                     .createHmac('sha256', 'WebAppData')
-                    .update(TOKEN)
+                    .update(process.env.TOKEN)
                     .digest()
 
                 const arr = encoded.split('&')
