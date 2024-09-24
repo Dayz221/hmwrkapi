@@ -13,8 +13,6 @@ import apiRouter from "./routes/apiRouter.js"
 import cors from "cors"
 import https from "https"
 import fs from "fs"
-import session from "express-session"
-import { SECRET_KEY } from "./config.js"
 import dotenv from "dotenv"
 // import teleBot from "./teleBot.js"
 
