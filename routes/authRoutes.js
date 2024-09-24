@@ -1,11 +1,8 @@
 import { Router } from "express"
-import color from "colors"
-import bcrypt from "bcrypt"
 import { check, validationResult } from "express-validator"
 import User from "../models/user.js"
 import Group from "../models/group.js"
 import jwt from "jsonwebtoken"
-import { SECRET_KEY, TOKEN } from "../config.js"
 import { checkPermissions } from "../middleware/checkPermissions.js"
 import crypto from "crypto";
 const authRouter = Router()
@@ -45,7 +42,7 @@ authRouter.post("/register",
             group.users.push(newUser._id)
             await group.save()
 
-            const token = jwt.sign({ id: newUser._id }, SECRET_KEY)
+            const token = jwt.sign({ id: newUser._id }, process.env.SECRET_KEY)
 
             res.status(200).send({ token: token, message: "Пользователь зарегистрирован" })
         } catch (e) {
@@ -96,7 +93,7 @@ authRouter.post("/login",
                 if (hmac !== _hash) return res.status(400).send({ message: "Ошибка при авторизации пользователя, проверьте данные" })
             }
 
-            const token = jwt.sign({ id: user._id }, SECRET_KEY)
+            const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY)
 
             res.status(200).send({ token: token, message: "Пользователь авторизован" })
         } catch (e) {
