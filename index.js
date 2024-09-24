@@ -13,8 +13,12 @@ import apiRouter from "./routes/apiRouter.js"
 import cors from "cors"
 import https from "https"
 import fs from "fs"
-import path from "path"
+import session from "express-session"
+import { SECRET_KEY } from "./config.js"
+import dotenv from "dotenv"
 // import teleBot from "./teleBot.js"
+
+dotenv.config()
 
 mongoose
         .connect("mongodb+srv://admin:qwedcvhu123@cluster0.7iifv.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
@@ -44,6 +48,12 @@ app.use(express.json())
 app.use(logger)
 app.use(cors())
 app.use(express.static('static'))
+app.use(session({
+    secret: SECRET_KEY,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false }
+}))
 app.use("/api/auth", authRouter)
 app.use("/api/tasks", taskRouter)
 app.use("/api/files", fileRouter)
@@ -51,7 +61,7 @@ app.use("/api", apiRouter)
 
 app.get('/', (req, res) => res.status(200).send({ message: "homework site and telegram-bot api" }))
 
-app.listen(80, (err) => {
+app.listen(process.env.PORT_HTTP, (err) => {
     if (err) return console.log(color.red(err))
 })    
 
@@ -61,7 +71,7 @@ https.createServer(
         key: fs.readFileSync('./cert/privkey.pem')
     },
     app
-).listen(443, (err) => {
+).listen(PORT_HTTPS, (err) => {
     if (err) return console.log(color.red(err))
 })
 
