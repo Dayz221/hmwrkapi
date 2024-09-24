@@ -63,7 +63,7 @@ https.createServer(
         key: fs.readFileSync('./cert/privkey.pem')
     },
     app
-).listen(PORT_HTTPS, (err) => {
+).listen(process.env.PORT_HTTPS, (err) => {
     if (err) return console.log(color.red(err))
 })
 
