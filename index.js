@@ -5,15 +5,13 @@ import authRouter from "./routes/authRoutes.js"
 import taskRouter from "./routes/taskRoutes.js"
 import fileRouter from "./routes/fileRoutes.js"
 import mongoose from "mongoose"
-import User from "./models/user.js"
-import bcrypt from "bcrypt"
-import { TELEGRAM_BOT_PASSWORD } from "./config.js"
 import Group from "./models/group.js"
 import apiRouter from "./routes/apiRouter.js"
 import cors from "cors"
 import https from "https"
 import fs from "fs"
 import dotenv from "dotenv"
+import './teleBot.js'
 // import teleBot from "./teleBot.js"
 
 dotenv.config()
@@ -23,16 +21,11 @@ mongoose
         .then(async () => { 
             console.log(color.green(`MongoDB attached!`))
             try {
-                const botAdmin = await User.findOne({ login: "TelegramBot" })
                 const groupId = await Group.findOne({ name: "ИУ7-16Б" })
                 if (!groupId) {
                     const group = new Group({ name: "ИУ7-16Б" })
                     await group.save()
                     groupId = group._id
-                }
-                if (!botAdmin) {
-                    const bot = new User({ login: "TelegramBot", password: bcrypt.hashSync(TELEGRAM_BOT_PASSWORD, 8), groupId: groupId._id, telegramId: 0, permissions: 3 })
-                    await bot.save()
                 }
             } catch (e) {
                 console.log(e)
