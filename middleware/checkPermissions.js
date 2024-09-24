@@ -1,5 +1,4 @@
 import jwt from "jsonwebtoken"
-import { SECRET_KEY } from "../config.js"
 import User from "../models/user.js"
 
 export const checkPermissions = (neededPermissions) => {
@@ -8,7 +7,7 @@ export const checkPermissions = (neededPermissions) => {
             if (!req.headers.authorization) return res.status(403).send({message: "Недостаточно прав доступа"})
                 const token = req.headers.authorization.split(" ")[1]
         
-                const decoded = jwt.verify(token, SECRET_KEY)
+                const decoded = jwt.verify(token, process.env.SECRET_KEY)
                 const candidate = await User.findOne({ _id: decoded.id })
         
                 if (candidate.permissions >= neededPermissions) {
