@@ -11,7 +11,6 @@ import cors from "cors"
 import https from "https"
 import fs from "fs"
 import dotenv from "dotenv"
-import './teleBot.js'
 // import teleBot from "./teleBot.js"
 
 dotenv.config()
