@@ -16,7 +16,7 @@ import dotenv from "dotenv"
 dotenv.config()
 
 mongoose
-        .connect("mongodb+srv://admin:qwedcvhu123@cluster0.7iifv.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+        .connect(process.env.MONGO_DB)
         .then(async () => { 
             console.log(color.green(`MongoDB attached!`))
             try {
