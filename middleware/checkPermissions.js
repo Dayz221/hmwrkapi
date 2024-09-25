@@ -4,6 +4,7 @@ import User from "../models/user.js"
 export const checkPermissions = (neededPermissions) => {
     return async (req, res, next) => {
         try {
+            if (req.method == "OPTIONS") return res.sendStatus(200)
             if (!req.headers.authorization) return res.status(403).send({message: "Недостаточно прав доступа"})
                 const token = req.headers.authorization.split(" ")[1]
         
