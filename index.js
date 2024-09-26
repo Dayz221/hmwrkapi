@@ -21,12 +21,11 @@ mongoose
         .then(async () => { 
             console.log(color.green(`MongoDB attached!`))
             try {
-                const groupId = await Group.findOne({ name: "ИУ7-16Б" })
-                if (!groupId) {
+                const group = await Group.findOne({ name: "ИУ7-16Б" })
+                if (!group) {
                     const hashedPassword = await bcrypt.hash(process.env.MY_GROUP_PASSWORD, 8)
                     const group = new Group({ name: "ИУ7-16Б", password: hashedPassword})
                     await group.save()
-                    groupId = group._id
                 }
             } catch (e) {
                 console.log(e)
