@@ -49,14 +49,16 @@ app.listen(process.env.PORT_HTTP, (err) => {
     if (err) return console.log(color.red(err))
 })    
 
-https.createServer(
-    {
-        cert: fs.readFileSync('./cert/fullchain.pem'),
-        key: fs.readFileSync('./cert/privkey.pem')
-    },
-    app
-).listen(process.env.PORT_HTTPS, (err) => {
-    if (err) return console.log(color.red(err))
-})
+if (process.env.PORT_HTTPS) {
+    https.createServer(
+        {
+            cert: fs.readFileSync('./cert/fullchain.pem'),
+            key: fs.readFileSync('./cert/privkey.pem')
+        },
+        app
+    ).listen(process.env.PORT_HTTPS, (err) => {
+        if (err) return console.log(color.red(err))
+    })
+}
 
 export default app
