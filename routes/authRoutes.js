@@ -4,7 +4,8 @@ import User from "../models/user.js"
 import Group from "../models/group.js"
 import jwt from "jsonwebtoken"
 import { checkPermissions } from "../middleware/checkPermissions.js"
-import crypto from "crypto";
+import crypto from "crypto"
+import bcrypt from "bcrypt"
 const authRouter = Router()
 
 
@@ -26,7 +27,8 @@ authRouter.post("/register",
             const group = await Group.findOne({ name: groupName })
             if (!group) return res.status(400).send({ message: "Такой группы не существует" })
 
-            if (groupPassword != group.password) return res.status(400).send({ message: "Неправильный пароль" })
+            if (!bcrypt.compareSync(groupPassword, group.password)) return res.status(400).send({ message: "Неправильный пароль" })
+            // if (groupPassword != group.password) return res.status(400).send({ message: "Неправильный пароль" })
 
             const newUser = new User({ 
                 telegramId: id,

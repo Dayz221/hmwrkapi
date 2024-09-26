@@ -6,11 +6,12 @@ import taskRouter from "./routes/taskRoutes.js"
 import fileRouter from "./routes/fileRoutes.js"
 import mongoose from "mongoose"
 import Group from "./models/group.js"
-import apiRouter from "./routes/apiRouter.js"
+import groupRouter from "./routes/groupRouter.js"
 import cors from "cors"
 import https from "https"
 import fs from "fs"
 import dotenv from "dotenv"
+import bcrypt from "bcrypt"
 // import teleBot from "./teleBot.js"
 
 dotenv.config()
@@ -22,7 +23,8 @@ mongoose
             try {
                 const groupId = await Group.findOne({ name: "ИУ7-16Б" })
                 if (!groupId) {
-                    const group = new Group({ name: "ИУ7-16Б" })
+                    const hashedPassword = await bcrypt.hash(process.env.MY_GROUP_PASSWORD, 8)
+                    const group = new Group({ name: "ИУ7-16Б", password: hashedPassword})
                     await group.save()
                     groupId = group._id
                 }
@@ -41,7 +43,7 @@ app.use(express.static('static'))
 app.use("/api/auth", authRouter)
 app.use("/api/tasks", taskRouter)
 app.use("/api/files", fileRouter)
-app.use("/api", apiRouter)
+app.use("/api", groupRouter)
 
 app.get('/', (req, res) => res.status(200).send({ message: "homework site and telegram-bot api" }))
 
