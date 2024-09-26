@@ -15,10 +15,8 @@ class TaskController {
                     const task = await Task.findOne({ _id: task_id }) 
                     const files = await Promise.all(task.files.map(async id => {
                         const file = await File.findOne({ _id: id })
-                        console.log({ name: file.name, _id: file._id })
                         return { name: file.name, _id: file._id }
                     }))
-                    console.log(files)
                     return { ...(task._doc), files: files }
                 }
             ))
