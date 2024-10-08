@@ -6,6 +6,7 @@ const taskSchema = new Schema({
     type: {type: String, default: ""},
     description: { type: String, default: "" },
     deadline: { type: Number, default: () => Date.now() + 1000*60*60*24*7 },
+    isGroupTask: { type: Boolean, default: false },
     files: [{ type: mongoose.Types.ObjectId, ref: "File" }]
 })
 

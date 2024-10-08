@@ -21,6 +21,13 @@ class FileController {
             if (req.fileExists) return res.status(400).send({ message: "Файл с таким названием уже загружен" })
             const task = await Task.findOne({ _id: req.params.task_id })
 
+            if (task.isGroupTask && req.user.permissions < 2) {
+                fs.unlink(path.join(process.cwd(), req.file.path), (err) => {
+                    if (err) res.status(500).send({ message: "Ошибка, проверьте данные" })
+                })
+                return res.status(403).send({ message: "Недостаточно прав доступа" })
+            }
+
             const file = new File({ name: req.file.originalname, path: req.file.path, taskId: req.params.task_id })
             await file.save()
 
@@ -38,13 +45,15 @@ class FileController {
         try {
             const file_id = req.params.file_id
             const file = await File.findOne({ _id: file_id })
+            const task = await Task.findOne({ _id: file.taskId })
+
+            if (task.isGroupTask && req.user.permissions < 2) return res.status(403).send({ message: "Недостаточно прав доступа" })
+
             fs.unlink(path.join(process.cwd(), file.path), (err) => {
                 if (err) res.status(500).send({ message: "Ошибка, проверьте данные" })
             })
 
-            const task = await Task.findOne({ _id: file.taskId })
             await task.updateOne({ $pull: { files: file_id } })
-
             await file.deleteOne()
 
             res.status(200).send({ message: "Файл удален успешно" })

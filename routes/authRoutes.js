@@ -105,18 +105,18 @@ authRouter.post("/login",
     }
 )
 
-authRouter.get("/get_user_by_id/:id", checkPermissions(2), async (req, res) => {
-    try {
-        const user_tg_id = req.params.id
-        const user = await User.findOne({ telegramId: user_tg_id })
-        const token = jwt.sign({ id: user._id }, SECRET_KEY)
+// authRouter.get("/get_user_by_id/:id", checkPermissions(2), async (req, res) => {
+//     try {
+//         const user_tg_id = req.params.id
+//         const user = await User.findOne({ telegramId: user_tg_id })
+//         const token = jwt.sign({ id: user._id }, SECRET_KEY)
 
-        res.status(200).send({ token, message: "Пользователь найден" })
-    } catch (e) {
-        console.log(e)
-        res.status(400).send({ message: "Пользователь не найден, проверьте корректность данных" })
-    }
-})
+//         res.status(200).send({ token, message: "Пользователь найден" })
+//     } catch (e) {
+//         console.log(e)
+//         res.status(400).send({ message: "Пользователь не найден, проверьте корректность данных" })
+//     }
+// })
 
 authRouter.get("/me", checkPermissions(1), async (req, res) => {
     try {
@@ -127,7 +127,8 @@ authRouter.get("/me", checkPermissions(1), async (req, res) => {
                 last_name: req.user.last_name,
                 username: req.user.username,
                 groupId: req.user.groupId,
-                photo_url: req.user.photoUrl
+                photo_url: req.user.photoUrl,
+                permissions: req.user.permissions
             }
         })
     } catch (e) {
