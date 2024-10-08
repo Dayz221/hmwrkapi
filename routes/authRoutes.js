@@ -6,6 +6,7 @@ import jwt from "jsonwebtoken"
 import { checkPermissions } from "../middleware/checkPermissions.js"
 import crypto from "crypto"
 import bcrypt from "bcrypt"
+import UserTask from "../models/userTask.js"
 const authRouter = Router()
 
 
@@ -37,6 +38,13 @@ authRouter.post("/register",
                 username: user.username,
                 groupId: group._id,
                 photoUrl: user.photo_url
+            })
+
+            group.tasks.forEach(async task => {
+                const userTask = new UserTask({ task, user: newUser._id })
+                newUser.tasks.push(userTask._id)
+
+                await userTask.save()
             })
 
             await newUser.save()
