@@ -11,16 +11,8 @@ const authRouter = Router()
 
 
 authRouter.post("/register",
-    [
-        check("id", "id не может быть пустым").notEmpty(),
-        check("first_name", "first_name не может быть пустым").notEmpty(),
-        check("groupName", "groupName не может быть пустым").notEmpty()
-    ],
     async (req, res) => {
         try {
-            const err = validationResult(req)
-            if (!err.isEmpty()) return res.status(400).send({ message: err.errors[0].msg })
-
             const { id, groupName, groupPassword, ...user } = req.body
             const candidate = await User.findOne({ telegramId: id })
             if (candidate) return res.status(400).send({ message: "Пользователь с таким id уже существует" })
