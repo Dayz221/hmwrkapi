@@ -46,7 +46,7 @@ class TaskController {
             if (isGroupTask) {
                 group.tasks.push(task)
                 group.users.map(async user_id => {
-                    const userTask = new UserTask({ task, user: user._id })
+                    const userTask = new UserTask({ task, user: user_id })
                     const group_user = await User.findOne({ _id: user_id })
                     group_user.tasks.push(userTask._id)
     
@@ -77,7 +77,13 @@ class TaskController {
             
             await task.updateOne(req.body)
             const response = await task.save()
-            return res.status(200).json({ task: { ...response._doc, ...req.body }, message: "OK" })
+
+            const files = await Promise.all(task.files.map(async id => {
+                const file = await File.findOne({ _id: id })
+                return { name: file.name, _id: file._id }
+            }))
+
+            return res.status(200).json({ task: { ...response._doc, ...req.body, files: files }, message: "OK" })
         } catch (e) {
             console.log(e)
             res.status(500).send({ message: "Ошибка, проверьте данные" })
