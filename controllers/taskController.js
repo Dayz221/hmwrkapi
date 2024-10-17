@@ -110,7 +110,6 @@ class TaskController {
             const user_tasks = await UserTask.find({ task: task._id })
             user_tasks.forEach(async user_task => {
                 const u = await User.findById(user_task.user)
-                console.log(u)
                 await u.updateOne({ $pull: { tasks: user_task._id } })
                 await user_task.deleteOne()
             })
