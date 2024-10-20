@@ -62,10 +62,9 @@ class TaskController {
                 await user.save()
             }
 
-            const newUserTask = await UserTask.findById(user.tasks[user.tasks.length-1])
-            const newTask = await Task.findById(newUserTask.task)
+            const newUserTask = await UserTask.findOne({ user: user._id })
 
-            res.status(200).send({ task: { ...(newTask._doc), utask_id: newUserTask._id, isCompleted: newUserTask.isCompleted }, message: "OK" })
+            res.status(200).send({ task: { ...(task._doc), utask_id: newUserTask._id, isCompleted: false }, message: "OK" })
         } catch (e) {
             console.log(e)
             res.status(400).send({ message: "Ошибка, проверьте данные" })
