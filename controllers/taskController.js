@@ -10,6 +10,7 @@ class TaskController {
     async getTasks(req, res) {
         try {
             const user = req.user
+            const group = await Group.findById(user.groupId)
 
             const tasks = await Promise.all(
                 user.tasks.map(async el => {
@@ -23,11 +24,18 @@ class TaskController {
                 })
             )
 
-            res.status(200).send({ tasks, message: "OK" })
+            res.status(200).send({ tasks, edits: group.edits, message: "OK" })
         } catch (e) {
             console.log(e)
             res.status(500).send({ message: "Ошибка, проверьте данные" })
         }
+    }
+
+    async getEdits(req, res) {
+        const user = req.user
+        const group = await Group.findById(user.groupId)
+
+        res.status(200).send({edits: group.edits})
     }
 
     async createTask(req, res) {
