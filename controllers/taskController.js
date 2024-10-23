@@ -34,7 +34,7 @@ class TaskController {
     async getEdits(req, res) {
         const user = req.user
         const group = await Group.findById(user.groupId)
-        // g
+
         res.status(200).send({edits: group.edits})
     }
 
