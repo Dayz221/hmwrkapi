@@ -44,7 +44,7 @@ app.use("/api/tasks", taskRouter)
 app.use("/api/files", fileRouter)
 app.use("/api", groupRouter)
 
-app.get('/', (req, res) => res.status(200).send({ message: "homework site and telegram-bot api.." }))
+app.get('/', (req, res) => res.status(200).send({ message: "homework site and telegram-bot api" }))
 
 app.listen(process.env.PORT_HTTP, (err) => {
     if (err) return console.log(color.red(err))
