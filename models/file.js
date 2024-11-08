@@ -4,7 +4,7 @@ const { Schema, model } = mongoose;
 const fileSchema = new Schema({
     name: { type: String, required: true },
     path: { type: String, required: true },
-    taskId: {type: mongoose.Types.ObjectId, required: true, ref: "Task"}
+    folderId: {type: mongoose.Types.ObjectId, default: null, ref: "Folder"}
 })
 
 export default model("File", fileSchema)

@@ -17,21 +17,21 @@ import bcrypt from "bcrypt"
 dotenv.config()
 
 mongoose
-        .connect(process.env.MONGO_DB)
-        .then(async () => { 
-            console.log(color.green(`MongoDB attached!`))
-            try {
-                const group = await Group.findOne({ name: "ИУ7-16Б" })
-                if (!group) {
-                    const hashedPassword = await bcrypt.hash(process.env.MY_GROUP_PASSWORD, 8)
-                    const group = new Group({ name: "ИУ7-16Б", password: hashedPassword})
-                    await group.save()
-                }
-            } catch (e) {
-                console.log(e)
-            } 
-        })
-        .catch((err) => { console.log(color.red(err)) })
+    .connect(process.env.MONGO_DB)
+    .then(async () => { 
+        console.log(color.green(`MongoDB attached!`))
+        try {
+            const group = await Group.findOne({ name: "ИУ7-16Б" })
+            if (!group) {
+                const hashedPassword = await bcrypt.hash(process.env.MY_GROUP_PASSWORD, 8)
+                const group = new Group({ name: "ИУ7-16Б", password: hashedPassword})
+                await group.save()
+            }
+        } catch (e) {
+            console.log(e)
+        } 
+    })
+    .catch((err) => { console.log(color.red(err)) })
 
 const app = express()
 
