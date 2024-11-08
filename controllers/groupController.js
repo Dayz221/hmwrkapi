@@ -1,12 +1,14 @@
 import { validationResult } from "express-validator"
 import Group from "../models/group.js"
+import Folder from '../models/folder.js'
+import File from '../models/file.js'
 import bcrypt from "bcrypt"
 
 class GroupController {
     async getGroups(req, res) {
         try {
             const groups = await Group.find()
-            const answ = groups.map(el => {return { name: el.name, users: el.users, tasks: el.tasks, _id: el._id }})
+            const answ = groups.map(el => { return { name: el.name, users: el.users, tasks: el.tasks, _id: el._id } })
             res.status(200).send({ groups: answ, message: "OK" })
         } catch (e) {
             console.log(e)
@@ -50,6 +52,36 @@ class GroupController {
             await group.updateOne({ password: hashedPassword })
 
             res.status(200).send({ message: "OK" })
+        } catch (e) {
+            console.log(e)
+            res.status(400).send({ message: "Ошибка, проверьте данные" })
+        }
+    }
+
+    async getGroupFolder(req, res) {
+        try {
+            const user = req.user
+            const group = await Group.findById(user.groupId)
+            let folder = await Folder.findOne({ _id: group.folder })
+            if (!folder) {
+                console.log("Create new group folder")
+                folder = Folder({ groupId: user.groupId, name: group.name })
+                group.folder = folder._id
+                await folder.save()
+                await group.save()
+            }
+
+            const files = await Promise.all(folder.files.map(async id => {
+                const file = await File.findOne({ _id: id })
+                return { name: file.name, _id: file._id }
+            }))
+
+            const folders = await Promise.all(folder.folders.map(async id => {
+                const folder = await Folder.findOne({ _id: id })
+                return { name: folder.name, files_count: folder.files.length, _id: folder._id }
+            }))
+
+            res.status(200).send({ folder: { ...folder._doc, files, folders }, message: "OK" })
         } catch (e) {
             console.log(e)
             res.status(400).send({ message: "Ошибка, проверьте данные" })

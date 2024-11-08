@@ -15,24 +15,22 @@ const fileExists = (filePath) => {
 const storage = multer.diskStorage({
     destination: async (req, file, cb) => {
         try {
-            const task = await Task.findOne({ _id: req.params.task_id })
             const group = await Group.findOne({ _id: req.user.groupId })
 
-            const time = new Date(task.deadline)
-            const uploadPath = path.join("files", group.name, task.subject, `${String(time.getUTCDate()).padStart(2, '0')}.${String(time.getUTCMonth()+1).padStart(2, '0')}.${time.getUTCFullYear()}`)
+            const uploadPath = path.join("files", group.name.toString())
+            console.log(uploadPath)
             
             file.originalname = Buffer.from(file.originalname, 'latin1').toString()
-            req.fileExists = await fileExists(path.join(uploadPath, file.originalname))
-
             fs.mkdirSync(uploadPath, { recursive: true })
 
             cb(null, uploadPath)
         } catch (e) {
             console.log(e)
+            cb(Error("Ошибка..."), null)
         }
     },
     filename: (req, file, cb) => {
-        cb(null, file.originalname)
+        cb(null, `${new Date().getTime()}.${file.originalname.split('.').at(-1)}`)
     }
 })
 
