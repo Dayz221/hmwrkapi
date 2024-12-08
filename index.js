@@ -6,6 +6,7 @@ import taskRouter from "./routes/taskRoutes.js"
 import fileRouter from "./routes/fileRoutes.js"
 import mongoose from "mongoose"
 import Group from "./models/group.js"
+import Folder from "./models/folder.js"
 import groupRouter from "./routes/groupRouter.js"
 import cors from "cors"
 import https from "https"
@@ -24,8 +25,15 @@ mongoose
             const group = await Group.findOne({ name: "ИУ7-16Б" })
             if (!group) {
                 const hashedPassword = await bcrypt.hash(process.env.MY_GROUP_PASSWORD, 8)
-                const group = new Group({ name: "ИУ7-16Б", password: hashedPassword})
+
+                
+                const newFolder = new Folder({ name: "ИУ7-16Б" })
+                const group = new Group({ name: "ИУ7-16Б", password: hashedPassword, folder: newFolder })
+                newFolder.groupId = group._id
+
+
                 await group.save()
+                await newFolder.save()
             }
         } catch (e) {
             console.log(e)
